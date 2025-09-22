@@ -204,6 +204,63 @@
             gap: 0.5rem;
         }
 
+        .share-section {
+            margin-top: 1.5rem;
+            position: relative;
+        }
+
+        .share-main-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: #5a7d5a;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s ease-in-out;
+        }
+
+        .share-main-btn:hover {
+            background: #486548;
+        }
+
+        .share-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 0.75rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .share-options a,
+        .share-options button {
+            background: #f8f9fa;
+            border: none;
+            padding: 0.5rem;
+            text-align: left;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .share-options a:hover,
+        .share-options button:hover {
+            background: #e6e6e6;
+        }
+
+        .hidden {
+            display: none;
+        }
+
         /* Larger Screens */
         @media (min-width: 768px) {
             .content-wrapper {
@@ -311,6 +368,30 @@
                         </a>
                     </div>
 
+                    <div class="share-section">
+                        <button id="share-btn" class="share-main-btn">
+                            <!-- Simple "Share" icon (Feather) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a2.5 2.5 0 0 0 0-1.39l7.05-4.11A2.5 2.5 0 1 0 14.5 5a2.5 2.5 0 0 0 .04.41L7.5 9.53a2.5 2.5 0 1 0 0 4.94l7.04 4.12a2.5 2.5 0 1 0 3.46-2.51z" />
+                            </svg>
+                            Share
+                        </button>
+
+                        <!-- Hidden share menu for fallback -->
+                        <div id="share-options" class="share-options hidden">
+                            <a href="https://wa.me/?text=https://siddiqui.short.gy/book" target="_blank">WhatsApp</a>
+                            <a href="https://www.instagram.com/?url=https://siddiqui.short.gy/book"
+                                target="_blank">Instagram</a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=https://siddiqui.short.gy/book"
+                                target="_blank">Facebook</a>
+                            <a
+                                href="mailto:?subject=Hamara Virsa Book Launch&body=Join us! https://siddiqui.short.gy/book">Email</a>
+                            <button id="copy-link">Copy Link</button>
+                        </div>
+                    </div>
+
                     <footer class="closing-text">
                         <div class="footer-content">
                             <div class="footer-text">
@@ -336,3 +417,38 @@
 </body>
 
 </html>
+
+
+<script>
+    const shareBtn = document.getElementById('share-btn');
+    const shareOptions = document.getElementById('share-options');
+    const copyBtn = document.getElementById('copy-link');
+    const shareUrl = "https://siddiqui.short.gy/book";
+
+    shareBtn.addEventListener('click', async () => {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: "Hamara Virsa - Book Launch",
+                    text: "You're invited! 🎉",
+                    url: shareUrl
+                });
+            } catch (err) {
+                console.log("Share cancelled", err);
+            }
+        } else {
+            // fallback menu
+            shareOptions.classList.toggle('hidden');
+        }
+    });
+
+    copyBtn.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            copyBtn.innerText = "Copied!";
+            setTimeout(() => copyBtn.innerText = "Copy Link", 2000);
+        } catch (err) {
+            alert("Could not copy link");
+        }
+    });
+</script>
